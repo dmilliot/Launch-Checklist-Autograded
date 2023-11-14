@@ -27,29 +27,36 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
         </ol>
         <img src = "${imageUrl}">`
  };
- function updateShuttleRequirements(fuelLevel, cargoLevel) {
-    div = document.getElementById("faultyItems");
+ function updateShuttleRequirements(document, list, fuelLevel, cargoLevel, pilot, copilot) {
     launchStatus = document.getElementById("launchStatus")
     fuelStatus = document.getElementById("fuelStatus");
     cargoStatus = document.getElementById("cargoStatus");
     pilotStatus = document.getElementById("pilotStatus");
     copilotStatus = document.getElementById("copilotStatus");
-    pilotStatus.innerHTML = `${pilot.value} is ready for launch`;
-    copilotStatus.innerHTML = `${copilot.value} is ready for launch`;
+    pilotStatus.innerHTML = `Pilot ${pilot} is ready for launch`;
+    copilotStatus.innerHTML = `Co-pilot ${copilot} is ready for launch`;
 
-    if(fuelLevel < 10000) {
-        div.style.visibility = "visible";
-        launchStatus.style.color = "red";
-        launchStatus.innerHTML = "Shuttle not ready for launch";
-        fuelStatus.innerHTML = "Not enough fuel for mission";
-    } else if(cargoLevel > 10000) {
-        div.style.visibility = "visible";
-        cargoStatus.innerHTML = "Too much mass for take off";
-        launchStatus.style.color = "red";
-        launchStatus.innerHTML = "Shuttle not ready for launch";
+    let fuelCheck = fuelLevel >= 10000;
+    let cargoCheck = cargoLevel <= 10000;
+    launchStatus.style.color = "red";
+    launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+
+    if(fuelCheck) {
+        fuelStatus.innerHTML = "Fuel level high enough for launch";
+    } else{
+        fuelStatus.innerHTML = "Fuel level too low for launch";
+    }
+    if(cargoCheck) {
+        cargoStatus.innerHTML = "Cargo mass low enough for launch"; 
     } else {
+        cargoStatus.innerHTML = "Cargo mass too heavy for launch";
+    }
+
+    if (fuelCheck && cargoCheck) {
         launchStatus.style.color = "green";
-        launchStatus.innerHTML = "Shuttle ready for launch";
+        launchStatus.innerHTML = "Shuttle is Ready for Launch"
+    } else {
+        list.style.visibility = "visible";
     }
 };
  
@@ -59,16 +66,16 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
     : "Is a Number"
  };
  
- function formSubmission( pilot, copilot, fuelLevel, cargoLevel, document) {
-    const pilotValidation = validateInput(pilot.value);
-    const copilotValidation = validateInput(copilot.value);
-    const fuelLevelValidation = validateInput(fuelLevel.value);
-    const cargoLevelValidation = validateInput(cargoLevel.value);
+ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
+    const pilotValidation = validateInput(pilot);
+    const copilotValidation = validateInput(copilot);
+    const fuelLevelValidation = validateInput(fuelLevel);
+    const cargoLevelValidation = validateInput(cargoLevel);
     
     if (pilotValidation === "Empty" || copilotValidation === "Empty" || fuelLevelValidation === "Empty" || cargoLevelValidation === "Empty") {
         alert("All fields required!");
     };
-    updateShuttleRequirements(fuelLevel.value)
+    updateShuttleRequirements(document, list, fuelLevel, cargoLevel, pilot, copilot)
   };
   
 
